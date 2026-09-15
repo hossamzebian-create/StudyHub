@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,37 +16,66 @@ import ScheduleNotifier from './components/ScheduleNotifier';
 
 function MainLayout({ children }) {
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const handleLogout = () => {
     localStorage.removeItem('studyhub_token');
     window.location.href = '/login';
   };
 
+  const closeMenu = () => {
+    if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="app-container">
       <ScheduleNotifier />
-      <div className="sidebar">
+      
+      {/* Mobile Topbar */}
+      <div className="mobile-topbar">
         <h2>StudyHub</h2>
+        <button className="hamburger-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      {/* Overlay for mobile */}
+      {isMobileMenuOpen && <div className="sidebar-overlay" onClick={closeMenu}></div>}
+
+      <div className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+          <h2>StudyHub</h2>
+          <button className="close-sidebar-btn" onClick={closeMenu}>
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+             </svg>
+          </button>
+        </div>
         <div className="nav-links">
-          <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
+          <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`} onClick={closeMenu}>
             Dashboard
           </Link>
-          <Link to="/courses" className={`nav-item ${location.pathname === '/courses' ? 'active' : ''}`}>
+          <Link to="/courses" className={`nav-item ${location.pathname === '/courses' ? 'active' : ''}`} onClick={closeMenu}>
             Courses
           </Link>
-          <Link to="/assignments" className={`nav-item ${location.pathname === '/assignments' ? 'active' : ''}`}>
+          <Link to="/assignments" className={`nav-item ${location.pathname === '/assignments' ? 'active' : ''}`} onClick={closeMenu}>
             Assignments
           </Link>
-          <Link to="/exams" className={`nav-item ${location.pathname === '/exams' ? 'active' : ''}`}>
+          <Link to="/exams" className={`nav-item ${location.pathname === '/exams' ? 'active' : ''}`} onClick={closeMenu}>
             Exams
           </Link>
-          <Link to="/study-plan" className={`nav-item ${location.pathname === '/study-plan' ? 'active' : ''}`}>
+          <Link to="/study-plan" className={`nav-item ${location.pathname === '/study-plan' ? 'active' : ''}`} onClick={closeMenu}>
             Study Plan
           </Link>
-          <Link to="/weekly-schedule" className={`nav-item ${location.pathname === '/weekly-schedule' ? 'active' : ''}`}>
+          <Link to="/weekly-schedule" className={`nav-item ${location.pathname === '/weekly-schedule' ? 'active' : ''}`} onClick={closeMenu}>
             Weekly Schedule
           </Link>
-          <Link to="/calendar" className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`}>
+          <Link to="/calendar" className={`nav-item ${location.pathname === '/calendar' ? 'active' : ''}`} onClick={closeMenu}>
             Calendar
           </Link>
         </div>
