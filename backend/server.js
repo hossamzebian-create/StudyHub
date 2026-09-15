@@ -7,9 +7,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const authenticateToken = require("./authMiddleware");
 
+const initDB = require("./init_db");
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Initialize database tables
+initDB();
 
 app.post("/api/register", async (req, res) => {
     try {
